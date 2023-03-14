@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Class to parse the PrintIdeal and PrintOptoAssembly outputs of the test class from the hotspot_pid* file and add them
@@ -62,6 +64,15 @@ class HotSpotPidFileParser {
      * methods of the test class that need to be IR matched (found in compilations map).
      */
     public Collection<IRMethod> parseCompilations(String hotspotPidFileName) {
+        final Path path = Paths.get(".").toAbsolutePath().getParent().toAbsolutePath();
+        final File file = path.toFile();
+        final File[] files = file.listFiles();
+        for (File file1: files){
+            if (file1.getName().contains("hotspot_pid")) {
+                hotspotPidFileName = file1.getName();
+            }
+        }
+        System.out.println("hotspotPidFileName:" + hotspotPidFileName);
         try {
             processFileLines(hotspotPidFileName);
             return compilationsMap.values();
@@ -73,6 +84,15 @@ class HotSpotPidFileParser {
     }
 
     private void processFileLines(String hotspotPidFileName) throws IOException {
+        final Path path = Paths.get(".").toAbsolutePath().getParent().toAbsolutePath();
+        final File file = path.toFile();
+        final File[] files = file.listFiles();
+        for (File file1: files){
+            if (file1.getName().contains("hotspot_pid")) {
+                hotspotPidFileName = file1.getName();
+            }
+        }
+        System.out.println("hotspotPidFileName:" + hotspotPidFileName);
         Map<Integer, IRMethod> compileIdMap = new HashMap<>();
         try (var reader = Files.newBufferedReader(Paths.get(hotspotPidFileName))) {
             Line line = new Line(reader, compileIdPatternForTestClass);
